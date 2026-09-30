@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Usagi Romantic Memory Museum</title>
+  <meta name="description" content="A cute romantic interactive adventure and memory museum gift inspired by Chiikawa Usagi aesthetics.">
+  <meta property="og:title" content="Usagi Romantic Memory Museum">
+  <meta property="og:description" content="A cute romantic interactive adventure and memory museum gift inspired by Chiikawa Usagi aesthetics.">
+  <meta property="og:type" content="website">
+
+  <!-- Google Fonts: Nunito & Quicksand for soft, cute, readable typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- Ambient Audio Player (Triggered on Start Button) -->
+  <audio id="bgMusic" src="assets/audio/music.mp3" preload="auto" loop></audio>
+
+  <!-- Ambient Background Floating Decorations (Canvas / Elements) -->
+  <div class="ambient-decorations" id="ambientDecorations" aria-hidden="true"></div>
+
+  <!-- 4-Heart Page Progress Indicator (Upper bar - pure hearts only) -->
+  <nav class="heart-progress-bar" id="heartProgressBar" aria-label="Page progress tracker">
+    <button class="heart-step active" id="heartStep1" data-page="page1" aria-label="Page 1: Introduction">
+      <span class="step-heart">💖</span>
+    </button>
+    <div class="heart-connector" id="connector1"></div>
+    <button class="heart-step locked" id="heartStep2" data-page="page2" aria-label="Page 2: Journey (Locked)">
+      <span class="step-heart">🤍</span>
+    </button>
+    <div class="heart-connector" id="connector2"></div>
+    <button class="heart-step locked" id="heartStep3" data-page="page3" aria-label="Page 3: Museum (Locked)">
+      <span class="step-heart">🤍</span>
+    </button>
+    <div class="heart-connector" id="connector3"></div>
+    <button class="heart-step locked" id="heartStep4" data-page="page4" aria-label="Page 4: Letter (Locked)">
+      <span class="step-heart">🤍</span>
+    </button>
+  </nav>
+
+  <!-- Hidden File Input for Changing Museum Photos -->
+  <input type="file" id="photoFileInput" accept="image/*" style="display: none;" />
+
+  <!-- APP VIEWPORT WRAPPER -->
+  <main class="app-container" id="app">
+
+    <!-- ========================================================
+         PAGE 1: THE INTRODUCTION
+         ======================================================== -->
+    <section id="page1" class="page-section active" aria-label="Introduction">
+      <div class="page-inner intro-card">
+        
+        <!-- Usagi Hero Illustration -->
+        <div class="usagi-hero-wrapper">
+          <div class="usagi-glow-ring"></div>
+          <div class="character-bounce">
+            <img src="assets/images/usagi.svg" 
+                 alt="Cute Usagi" 
+                 class="usagi-avatar"
+                 id="introUsagiImg"
+                 onerror="this.onerror=null; this.src='assets/images/usagi.jpg';" />
+          </div>
+          <div class="floating-hearts-cluster" aria-hidden="true">
+            <span class="bubble-heart h1">🌸</span>
+            <span class="bubble-heart h2">✨</span>
+            <span class="bubble-heart h3">💖</span>
+          </div>
+        </div>
+
+        <!-- Intro Content -->
+        <div class="intro-header">
+          <h1 class="intro-title special-sparkle-title" id="page1Title">
+            <span class="title-text-shimmer">a special day for my darling</span>
+            <span class="title-sparkle s1" aria-hidden="true">✨</span>
+            <span class="title-sparkle s2" aria-hidden="true">💖</span>
+          </h1>
+          <p class="intro-subtitle" id="page1Message">
+            Usagi has prepared a little adventure and a secret museum filled with cherished memories just for you.
+          </p>
+        </div>
+
+        <!-- Start Journey CTA Button -->
+        <div class="intro-action">
+          <button id="startJourneyBtn" class="cute-btn primary-btn pulse-anim">
+            <span class="btn-sparkle">✨</span>
+            <span id="startBtnText">Start Our Journey 💕</span>
+            <span class="btn-sparkle">✨</span>
+          </button>
+          <p class="intro-hint">Turn on your volume &amp; tap to begin</p>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================
+         PAGE 2: THE INTERACTIVE JOURNEY
+         ======================================================== -->
+    <section id="page2" class="page-section" aria-label="The Journey">
+      <div class="journey-viewport">
+
+        <!-- Sky & Clouds -->
+        <div class="journey-sky">
+          <div class="cloud cloud-1"></div>
+          <div class="cloud cloud-2"></div>
+          <div class="cloud cloud-3"></div>
+          <div class="journey-sun"></div>
+        </div>
+
+        <!-- Rolling Pastel Hills (Parallax layers) -->
+        <div class="journey-hills hill-back"></div>
+        <div class="journey-hills hill-front"></div>
+
+        <!-- Mini-Game Status HUD -->
+        <div class="journey-hud" id="journeyHud">
+          <div class="hud-pill">
+            <span class="hud-label" id="hudInstruction">Tap the photos to collect memories with Usagi! 📷</span>
+            <div class="hud-counter">
+              <span class="photo-hud-icon">📷</span>
+              <span id="heartsCollectedCount">0</span>/<span id="heartsTargetCount">5</span>
+            </div>
+          </div>
+          <!-- Sweet toast notification for mini-game taps -->
+          <div class="journey-toast" id="journeyToast">Tap the floating photo snapshots along the road! 📷✨</div>
+        </div>
+
+        <!-- Moving Scenery Layer (Trees, flowers along road) -->
+        <div class="scenery-container" id="sceneryLayer">
+          <div class="roadside-flowers" id="roadsideFlowers"></div>
+          <div class="road-track" id="roadTrack">
+            <div class="road-curb-top"></div>
+            <div class="road-markings"></div>
+          </div>
+        </div>
+
+        <!-- Character In Motion (Hopping, Driving, Exiting, Entering) -->
+        <div class="traveler-container" id="travelerContainer">
+          
+          <!-- Walking Usagi State -->
+          <div class="traveler-walking" id="travelerWalking">
+            <div class="usagi-speech-bubble" id="usagiSpeech">Yaha! Let's go! 🌸</div>
+            <div class="usagi-walk-bounce">
+              <img src="assets/images/usagi.svg" 
+                   alt="Usagi Traveling" 
+                   class="usagi-traveler-img"
+                   onerror="this.onerror=null; this.src='assets/images/usagi.jpg';" />
+            </div>
+          </div>
+
+          <!-- Boarding Animation State: Vehicle arrives first, Usagi hops in before moving -->
+          <div class="traveler-boarding-scene" id="travelerBoardingScene" style="display: none;">
+            <!-- Vehicle waiting on the road -->
+            <div class="boarding-car-wrapper" id="boardingCarWrapper">
+              <div class="vehicle-body">
+                <div class="vehicle-windshield"></div>
+                <div class="vehicle-chassis">
+                  <div class="headlight"></div>
+                  <div class="car-heart">💖</div>
+                </div>
+                <div class="wheel wheel-left"><div class="wheel-rim"></div></div>
+                <div class="wheel wheel-right"><div class="wheel-rim"></div></div>
+              </div>
+            </div>
+
+            <!-- Usagi standing beside car preparing to hop in -->
+            <div class="usagi-boarding-character" id="usagiBoardingCharacter">
+              <div class="usagi-speech-bubble" id="boardingSpeech">Hop in! 🚗✨</div>
+              <div class="usagi-hop-bounce">
+                <img src="assets/images/usagi.svg" 
+                     alt="Usagi Boarding" 
+                     class="usagi-boarding-img"
+                     onerror="this.onerror=null; this.src='assets/images/usagi.jpg';" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Cute Vehicle Driving State (Unlocked after mini-game) -->
+          <div class="traveler-vehicle" id="travelerVehicle" style="display: none;">
+            <div class="vehicle-body">
+              <div class="vehicle-windshield"></div>
+              <div class="vehicle-driver">
+                <img src="assets/images/usagi.svg" 
+                     alt="Usagi Driving" 
+                     class="usagi-driver-img"
+                     onerror="this.onerror=null; this.src='assets/images/usagi.jpg';" />
+              </div>
+              <div class="vehicle-chassis">
+                <div class="headlight"></div>
+                <div class="car-heart">💖</div>
+              </div>
+              <div class="wheel wheel-left"><div class="wheel-rim"></div></div>
+              <div class="wheel wheel-right"><div class="wheel-rim"></div></div>
+              <div class="exhaust-smoke" id="exhaustSmoke">
+                <span class="smoke-heart">♡</span>
+                <span class="smoke-heart">♡</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Parked Car & Usagi Stepping Out on Arrival -->
+          <div class="traveler-arrival-scene" id="travelerArrivalScene" style="display: none;">
+            <div class="parked-vehicle">
+              <div class="vehicle-body parked-car-body">
+                <div class="vehicle-chassis">
+                  <div class="car-heart">💖</div>
+                </div>
+                <div class="wheel wheel-left"><div class="wheel-rim"></div></div>
+                <div class="wheel wheel-right"><div class="wheel-rim"></div></div>
+              </div>
+            </div>
+            <div class="usagi-outside-car" id="usagiOutsideCar">
+              <div class="usagi-speech-bubble" id="arrivalSpeech">We're here! The Usagi Museum! ✨</div>
+              <div class="usagi-arrive-bounce">
+                <img src="assets/images/usagi.svg" 
+                     alt="Usagi Arrived" 
+                     class="usagi-arrive-img"
+                     onerror="this.onerror=null; this.src='assets/images/usagi.jpg';" />
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Floating Interactive Collectibles (Spawned dynamically via JS) -->
+        <div class="collectibles-layer" id="collectiblesLayer"></div>
+
+        <!-- Cinematic Destination: The Authentic USAGI MUSEUM -->
+        <div class="destination-museum" id="destinationMuseum">
+          <div class="museum-building-wrap" id="museumBuildingWrap">
+            
+            <!-- Usagi Bunny Ears Crown on Museum Roof -->
+            <div class="museum-bunny-crown" aria-hidden="true">
+              <div class="crown-ear left"></div>
+              <div class="crown-ear right"></div>
+            </div>
+
+            <!-- Neoclassical Museum Building matching Page 3 Interior -->
+            <div class="museum-building">
+              <div class="museum-roof-tri"></div>
+              
+              <!-- Official Sign on Building: USAGI MUSEUM -->
+              <div class="museum-pediment">
+                <span class="museum-sign-title">USAGI MUSEUM</span>
+              </div>
+              <div class="museum-sub-arch">
+                <span>MEMORY ARCHIVE</span>
+              </div>
+
+              <!-- Classical Pillars -->
+              <div class="museum-columns">
+                <div class="m-column"><div class="col-cap"></div><div class="col-shaft"></div></div>
+                <div class="m-column"><div class="col-cap"></div><div class="col-shaft"></div></div>
+                <div class="m-column"><div class="col-cap"></div><div class="col-shaft"></div></div>
+                <div class="m-column"><div class="col-cap"></div><div class="col-shaft"></div></div>
+              </div>
+
+              <!-- Grand Entrance with Double Doors -->
+              <div class="museum-entrance-grand" id="museumEntranceGrand">
+                <div class="entrance-lantern left">🏮</div>
+                
+                <div class="entrance-doorway-frame">
+                  <div class="doorway-arch-window">
+                    <span>✨ 🏛️ ✨</span>
+                  </div>
+                  
+                  <!-- Physical Double Doors that Swing Open -->
+                  <div class="double-doors-container" id="doubleDoorsContainer">
+                    <div class="door-panel door-left" id="doorLeafLeft">
+                      <div class="door-molding"></div>
+                      <div class="door-handle"></div>
+                    </div>
+                    <div class="door-panel door-right" id="doorLeafRight">
+                      <div class="door-molding"></div>
+                      <div class="door-handle"></div>
+                    </div>
+                  </div>
+
+                  <!-- Warm Golden Museum Interior Light Spilling Out -->
+                  <div class="doorway-interior-glow" id="doorwayInteriorGlow">
+                    <div class="doorway-light-flood"></div>
+                    <div class="doorway-foyer-preview">
+                      <span class="preview-sparkle s1">✨</span>
+                      <span class="preview-sparkle s2">💖</span>
+                      <span class="preview-sparkle s3">🌸</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="entrance-lantern right">🏮</div>
+              </div>
+
+              <!-- Grand Stone Steps -->
+              <div class="museum-grand-steps">
+                <div class="m-step step-1"></div>
+                <div class="m-step step-2"></div>
+                <div class="m-step step-3"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Continuous Camera Doorway Push Overlay -->
+        <div class="doorway-transition-portal" id="doorwayTransitionPortal" aria-hidden="true"></div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================
+         PAGE 3: THE MEMORY MUSEUM
+         ======================================================== -->
+    <section id="page3" class="page-section" aria-label="The Memory Museum">
+      <div class="museum-container">
+
+        <!-- Museum Entrance Foyer (Continuous view from Page 2 doors) -->
+        <div class="museum-entrance-foyer" id="museumEntranceFoyer">
+          <div class="foyer-door-frame-back">
+            <div class="foyer-opened-door left"></div>
+            <div class="foyer-light-stream"></div>
+            <div class="foyer-opened-door right"></div>
+          </div>
+          <span class="foyer-entry-label">USAGI MUSEUM • GRAND GALLERY</span>
+        </div>
+
+        <!-- Museum Grand Header -->
+        <header class="museum-header">
+          <div class="museum-badge">EXHIBITION ROOM</div>
+          <h2 class="museum-title" id="museumTitle">Usagi Museum</h2>
+          <div class="museum-ribbon-divider">
+            <span>✨ 🌸 🏛️ 🌸 ✨</span>
+          </div>
+        </header>
+
+        <!-- Museum Wall Exhibits Grid (Preserving uploaded custom photos) -->
+        <div class="gallery-hall" id="galleryHall">
+          <!-- Dynamically populated from CONFIG.photos in script.js -->
+        </div>
+
+        <!-- ========================================================
+             FINAL MUSEUM EXHIBIT: USAGI DISCOVERS THE LETTER
+             ======================================================== -->
+        <div class="final-exhibit-section" id="finalExhibitSection" aria-label="Final Special Exhibit">
+          
+          <div class="final-exhibit-header">
+            <div class="exhibit-spotlight-beam" aria-hidden="true"></div>
+            <span class="final-exhibit-badge">SPECIAL EXHIBIT</span>
+            <h3 class="final-exhibit-title">The Curator's Archive Table</h3>
+          </div>
+
+          <div class="final-scene-stage" id="finalSceneStage">
+            <!-- Warm Ambient Spotlight Floor Ring -->
+            <div class="stage-spotlight-floor" aria-hidden="true"></div>
+
+            <!-- Soft Floating Ambient Particles (Petals & Sparkles) -->
+            <div class="stage-floating-particles" aria-hidden="true">
+              <span class="stage-particle p1">🌸</span>
+              <span class="stage-particle p2">✨</span>
+              <span class="stage-particle p3">🌸</span>
+              <span class="stage-particle p4">✨</span>
+            </div>
+
+            <!-- Display Area: Small Wooden Table, Flowers, Sealed Envelope -->
+            <div class="display-table-area" id="displayTableArea">
+              
+              <!-- Fresh Vase of Flowers Beside Table -->
+              <div class="table-flowers-arrangement" aria-hidden="true">
+                <span class="flowers-bouquet">🌸🌷🌼</span>
+                <div class="flower-vase-glass"></div>
+              </div>
+
+              <!-- Elegant Wooden Museum Table -->
+              <div class="wooden-display-table">
+                <div class="table-top-slab">
+                  <div class="table-silk-cloth"></div>
+                </div>
+                <div class="table-pedestal-legs">
+                  <div class="t-leg t-left"></div>
+                  <div class="t-leg t-right"></div>
+                </div>
+                <div class="table-cast-shadow"></div>
+              </div>
+
+              <!-- Sealed Cream/Pink Envelope Resting as Final Exhibit -->
+              <div class="table-envelope-exhibit" id="tableEnvelopeExhibit">
+                <div class="envelope-warm-glow" aria-hidden="true"></div>
+                <div class="table-envelope-card">
+                  <div class="env-front-triangle"></div>
+                  <div class="env-heart-seal" id="envHeartSeal">
+                    <span class="env-seal-icon">💖</span>
+                  </div>
+                  <div class="env-ribbon-tag">For: My Darling</div>
+                </div>
+                <!-- Discovery Sparkle Above Envelope -->
+                <div class="envelope-discovery-sparkle" id="envelopeDiscoverySparkle" aria-hidden="true">✨</div>
+              </div>
+
+            </div>
+
+            <!-- Usagi Discoverer Character Sprite -->
+            <div class="usagi-discoverer-scene" id="usagiDiscovererScene">
+              <div class="usagi-exclamation-bubble" id="usagiNoticeBubble">!</div>
+              <div class="usagi-walk-wrap" id="usagiWalkWrap">
+                <img src="assets/images/usagi.svg" 
+                     alt="Usagi beside table" 
+                     class="usagi-curator-svg"
+                     onerror="this.onerror=null; this.src='assets/images/usagi.jpg';" />
+              </div>
+              <!-- Held Envelope in Usagi's Paws -->
+              <div class="usagi-held-letter-envelope" id="usagiHeldEnvelope" style="display: none;">
+                <div class="held-letter-envelope-mini">
+                  <span class="held-heart-badge">💖</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Subtle Interaction Prompt: "Open it?" with cute button "♡ Open Letter" -->
+            <div class="letter-discovery-prompt" id="letterDiscoveryPrompt" style="display: none;">
+              <span class="prompt-question">Open it?</span>
+              <button class="open-letter-action-btn" id="openLetterActionBtn" aria-label="Open Letter">
+                <span class="btn-heart-sparkle">♡</span>
+                <span class="btn-text">Open Letter</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- CINEMATIC ENVELOPE OPENING OVERLAY (Zoom & Unfold into Page 4) -->
+          <div class="cinematic-envelope-portal" id="cinematicEnvelopePortal" aria-hidden="true">
+            <div class="portal-backdrop-blur"></div>
+            
+            <div class="cinematic-envelope-zoom-box" id="cinematicEnvelopeZoomBox">
+              <div class="cinematic-envelope-body" id="cinematicEnvelopeBody">
+                <div class="cinematic-envelope-back"></div>
+                <div class="cinematic-letter-unfolding-sheet" id="cinematicLetterSheet">
+                  <div class="cinematic-sheet-lines"></div>
+                  <div class="cinematic-sheet-stamp">🌸</div>
+                </div>
+                <div class="cinematic-envelope-pocket"></div>
+                <div class="cinematic-envelope-flap" id="cinematicEnvelopeFlap"></div>
+                <div class="cinematic-heart-seal" id="cinematicHeartSeal">💖</div>
+              </div>
+              <div class="cinematic-light-burst" id="cinematicLightBurst"></div>
+              <div class="cinematic-particles-cluster" id="cinematicParticlesCluster"></div>
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ========================================================
+         PAGE 4: THE FINAL LETTER
+         ======================================================== -->
+    <section id="page4" class="page-section" aria-label="The Final Letter">
+      <div class="letter-room-container">
+
+        <!-- Ambient Room Atmosphere -->
+        <div class="letter-room-header">
+          <span class="letter-kicker">Confidential &amp; From The Heart</span>
+          <h2 class="letter-room-title" id="letterRoomTitle">A Letter For You</h2>
+          <p class="letter-room-date" id="letterRoomDate">To My Favorite Girl • Forever &amp; Always</p>
+        </div>
+
+        <!-- Envelope / Letter Card -->
+        <div class="letter-card-wrapper" id="letterCardWrapper">
+
+          <!-- Sealed Envelope State (Opened smoothly) -->
+          <div class="letter-envelope" id="letterEnvelope">
+            <div class="envelope-flap"></div>
+            <div class="envelope-seal" id="envelopeSeal">
+              <span class="seal-heart">💌</span>
+              <span class="seal-text">Tap to Open</span>
+            </div>
+            <div class="envelope-body">
+              <p class="envelope-to">For: My Darling</p>
+            </div>
+          </div>
+
+          <!-- Unfolded Letter Paper Sheet -->
+          <article class="letter-paper" id="letterPaper" style="display: none;">
+            
+            <!-- Letter Header Ribbon -->
+            <div class="paper-ribbon">
+              <span class="ribbon-flower">🌸</span>
+              <span class="ribbon-title">From Usagi &amp; Me</span>
+              <span class="ribbon-flower">🌸</span>
+            </div>
+
+            <!-- Typing Speed Controls Bar -->
+            <div class="typewriter-toolbar">
+              <span class="typing-status" id="typingStatus">
+                <span class="typing-dot"></span> Writing from the heart...
+              </span>
+              <div class="toolbar-actions">
+                <button id="skipTypingBtn" class="tool-btn" title="Show complete letter">Skip Typing</button>
+                <button id="replayLetterBtn" class="tool-btn" title="Replay letter animation">Replay</button>
+              </div>
+            </div>
+
+            <!-- Letter Body with Typewriter Effect -->
+            <div class="letter-body-content">
+              <div id="typewriterText" class="typewriter-prose"></div>
+              <span class="typewriter-cursor" id="typewriterCursor">|</span>
+            </div>
+
+            <!-- Letter Conclusion (Revealed after typing) -->
+            <div class="letter-signature-block" id="letterSignature" style="display: none;">
+              <div class="signature-divider"></div>
+              <p class="sig-sender" id="letterSender">Forever yours, with all my love ❤️</p>
+              
+              <!-- Celebration Usagi -->
+              <div class="usagi-celebration">
+                <div class="usagi-celeb-bounce">
+                  <img src="assets/images/usagi.svg" 
+                       alt="Celebration Usagi" 
+                       class="usagi-celeb-img"
+                       onerror="this.onerror=null; this.src='assets/images/usagi.jpg';" />
+                </div>
+                <div class="celeb-hearts" aria-hidden="true">
+                  <span>💖</span><span>🌸</span><span>✨</span><span>🎉</span>
+                </div>
+              </div>
+
+              <!-- Return to First Page Button (Replaces revisit museum) -->
+              <div class="final-nav-actions">
+                <button id="backToStartBtn" class="cute-btn secondary-btn">
+                  <span>← Back to First Page 🌸</span>
+                </button>
+              </div>
+            </div>
+
+          </article>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ========================================================
+       MODAL: MUSEUM PHOTO LIGHTBOX
+       ======================================================== -->
+  <div class="museum-modal" id="photoModal" aria-hidden="true" role="dialog" aria-modal="true">
+    <div class="modal-backdrop" id="modalBackdrop"></div>
+    <div class="modal-dialog">
+      <button class="modal-close-btn" id="modalCloseBtn" aria-label="Close photo">✕</button>
+      
+      <div class="modal-frame">
+        <div class="modal-image-wrapper">
+          <img src="" alt="" id="modalImg" class="modal-img" />
+        </div>
+        <div class="modal-plaque">
+          <div class="plaque-header">
+            <h4 class="plaque-title" id="modalTitle">Exhibit Title</h4>
+            <span class="plaque-date" id="modalDate">Date</span>
+          </div>
+          <p class="plaque-caption" id="modalCaption">Exhibit Caption</p>
+          <div class="modal-action-bar">
+            <button id="modalChangePhotoBtn" class="cute-btn secondary-btn small-btn">
+              <span>📷 Change Photo</span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,114 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 380 410" width="100%" height="100%" class="usagi-svg" style="display:block; overflow:visible;">
+  <!-- AUTHENTIC CHIIKAWA USAGI (Matching Nagano official model) -->
+  <defs>
+    <filter id="softShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="4" stdDeviation="6" flood-color="rgba(58,32,22,0.12)" />
+    </filter>
+  </defs>
+
+  <g id="usagi-character" stroke="#3A2016" stroke-width="6.8" stroke-linecap="round" stroke-linejoin="round">
+    
+    <!-- LEFT EAR -->
+    <path d="M 152 126 
+             C 142 80, 138 20, 158 15 
+             C 176 10, 178 70, 174 122" 
+          fill="#FFF8C9" />
+    <!-- Left Ear Inner Pink -->
+    <path d="M 156 110 
+             C 148 76, 146 36, 158 30 
+             C 168 26, 168 68, 166 106" 
+          fill="#FFAEC5" stroke="none" />
+
+    <!-- RIGHT EAR -->
+    <path d="M 206 122 
+             C 202 70, 202 10, 222 15 
+             C 242 20, 238 80, 228 126" 
+          fill="#FFF8C9" />
+    <!-- Right Ear Inner Pink -->
+    <path d="M 214 106 
+             C 212 68, 212 26, 222 30 
+             C 234 36, 232 76, 224 110" 
+          fill="#FFAEC5" stroke="none" />
+
+    <!-- FEET / LEGS -->
+    <!-- Left Stubby Leg -->
+    <path d="M 134 338 
+             C 131 362, 128 382, 140 384 
+             C 152 386, 151 364, 152 342" 
+          fill="#FFF8C9" />
+    <!-- Right Stubby Leg -->
+    <path d="M 228 342 
+             C 229 364, 228 386, 240 384 
+             C 252 382, 249 362, 246 338" 
+          fill="#FFF8C9" />
+
+    <!-- TORSO & ROUND BELLY -->
+    <path d="M 118 250 
+             C 106 280, 102 320, 126 348 
+             C 146 365, 234 365, 254 348 
+             C 278 320, 274 280, 262 250 Z" 
+          fill="#FFF8C9" />
+
+    <!-- ICONIC WIDE CHIIKAWA HEAD (Chubby cheeks & flat bun top) -->
+    <path d="M 94 218 
+             C 68 165, 114 116, 190 116 
+             C 266 116, 312 165, 286 218 
+             C 304 258, 282 284, 248 288 
+             C 214 292, 166 292, 132 288 
+             C 98 284, 76 258, 94 218 Z" 
+          fill="#FFF8C9" />
+
+    <!-- LEFT STUBBY ARM -->
+    <path d="M 108 266 
+             C 96 280, 94 298, 104 306 
+             C 114 310, 120 294, 122 278" 
+          fill="#FFF8C9" />
+
+    <!-- RIGHT STUBBY ARM -->
+    <path d="M 272 266 
+             C 284 280, 286 298, 276 306 
+             C 266 310, 260 294, 258 278" 
+          fill="#FFF8C9" />
+
+    <!-- EYEBROWS (Delicate curved arcs high on forehead) -->
+    <path d="M 126 172 Q 144 148 164 166" fill="none" stroke="#3A2016" stroke-width="5.5" />
+    <path d="M 216 166 Q 236 148 254 172" fill="none" stroke="#3A2016" stroke-width="5.5" />
+
+    <!-- EYES (Big glossy black ovals with double circular catchlights) -->
+    <!-- Left Eye -->
+    <ellipse cx="152" cy="198" rx="14" ry="16" fill="#3A2016" stroke="none" />
+    <circle cx="148" cy="192" r="5.5" fill="#FFFFFF" stroke="none" />
+    <circle cx="157" cy="203" r="3" fill="#FFFFFF" stroke="none" />
+
+    <!-- Right Eye -->
+    <ellipse cx="228" cy="198" rx="14" ry="16" fill="#3A2016" stroke="none" />
+    <circle cx="224" cy="192" r="5.5" fill="#FFFFFF" stroke="none" />
+    <circle cx="233" cy="203" r="3" fill="#FFFFFF" stroke="none" />
+
+    <!-- BLUSH CHEEKS WITH 4 HATCH MARKS -->
+    <!-- Left Cheek -->
+    <ellipse cx="118" cy="226" rx="20" ry="13" fill="#FFB2C5" opacity="0.95" stroke="none" />
+    <path d="M 109 217 L 105 235 
+             M 116 216 L 112 236 
+             M 123 216 L 119 236 
+             M 130 217 L 126 235" 
+          stroke="#3A2016" stroke-width="4.5" stroke-linecap="round" />
+
+    <!-- Right Cheek -->
+    <ellipse cx="262" cy="226" rx="20" ry="13" fill="#FFB2C5" opacity="0.95" stroke="none" />
+    <path d="M 250 217 L 254 235 
+             M 257 216 L 261 236 
+             M 264 216 L 268 236 
+             M 271 217 L 275 235" 
+          stroke="#3A2016" stroke-width="4.5" stroke-linecap="round" />
+
+    <!-- AUTHENTIC USAGI MOUTH: '3' / 'ω' SMILE -->
+    <path d="M 174 226 Q 182 240 190 231 Q 198 240 206 226" 
+          fill="none" stroke="#3A2016" stroke-width="6.5" />
+    
+    <!-- CHIN INDENTATION DASH -->
+    <path d="M 188 245 Q 190 248 192 245" 
+          fill="none" stroke="#3A2016" stroke-width="4.8" />
+
+  </g>
+</svg>

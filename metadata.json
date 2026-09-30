@@ -1,0 +1,6 @@
+{
+  "name": "Usagi Romantic Memory Museum",
+  "description": "An interactive, mobile-first romantic 4-page adventure and memory museum inspired by Chiikawa Usagi aesthetics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
